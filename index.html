@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EDAIC Gesetze-Quiz</title>
+<meta name="description" content="246 Übungsfragen (Multiple True/False) zu physiologischen und physikalischen Gesetzen für das EDAIC Part I – mit Erklärungen und Merksprüchen.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F4F6F8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EDAIC Quiz">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<script src="questions.js?v=c0850016"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEFF3; --line:#D3DBE2; --line-strong:#AEBBC7;
+  --ink:#15222C; --ink-2:#4A5A68; --ink-3:#7C8B98;
+  --accent:#1F4E8C; --accent-ink:#FFFFFF; --accent-soft:#E3ECF8;
+  --true:#1B7F5A; --true-soft:#DDF2E8; --false:#B03A2E; --false-soft:#F8E1DD;
+  --note:#FFF4D6; --note-line:#E3C86F; --note-ink:#5B4300;
+  --formula:#F1F4F7; --focus:#1F4E8C;
+  --shadow:0 1px 2px rgba(21,34,44,.06),0 8px 24px -12px rgba(21,34,44,.18);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F161C; --surface:#161F27; --surface-2:#1E2932; --line:#2B3843; --line-strong:#3C4C5A;
+    --ink:#E7EDF2; --ink-2:#AEBCC8; --ink-3:#7C8B98;
+    --accent:#7FA7E6; --accent-ink:#0F161C; --accent-soft:#1D2C42;
+    --true:#5CC49A; --true-soft:#16342A; --false:#F08A7C; --false-soft:#3E1F1B;
+    --note:#2B2410; --note-line:#6E5A1F; --note-ink:#F1DE9E;
+    --formula:#1B252E; --focus:#7FA7E6;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F161C; --surface:#161F27; --surface-2:#1E2932; --line:#2B3843; --line-strong:#3C4C5A;
+  --ink:#E7EDF2; --ink-2:#AEBCC8; --ink-3:#7C8B98;
+  --accent:#7FA7E6; --accent-ink:#0F161C; --accent-soft:#1D2C42;
+  --true:#5CC49A; --true-soft:#16342A; --false:#F08A7C; --false-soft:#3E1F1B;
+  --note:#2B2410; --note-line:#6E5A1F; --note-ink:#F1DE9E;
+  --formula:#1B252E; --focus:#7FA7E6;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;text-wrap:balance;margin:0;letter-spacing:-.01em}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.tnum{font-variant-numeric:tabular-nums}
+.eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);font-weight:600}
+
+.app{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:100vh}
+aside{border-right:1px solid var(--line);background:var(--surface);padding:22px 20px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh;overflow:auto}
+main{padding:28px 32px 80px;max-width:860px;width:100%;margin:0 auto}
+.brand h1{font-size:1.35rem;font-weight:700;line-height:1.15}
+.brand p{margin:6px 0 0;color:var(--ink-2);font-size:.88rem}
+
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--surface-2);padding:4px;border-radius:10px}
+.modes button{border:0;background:transparent;border-radius:7px;padding:8px 6px;font-weight:500;font-size:.88rem;color:var(--ink-2)}
+.modes button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+.topics{display:flex;flex-direction:column;gap:4px}
+.topic{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;border:1px solid transparent;background:transparent;text-align:left;border-radius:8px;padding:8px 10px;font-size:.9rem;color:var(--ink-2);width:100%}
+.topic:hover{background:var(--surface-2)}
+.topic[aria-pressed="true"]{border-color:var(--line);background:var(--accent-soft);color:var(--ink)}
+.topic .n{font-size:.78rem;color:var(--ink-3)}
+.topic .bar{grid-column:1/-1;height:3px;background:var(--surface-2);border-radius:2px;overflow:hidden}
+.topic .bar i{display:block;height:100%;background:var(--true);width:0}
+
+.side-stats{border-top:1px solid var(--line);padding-top:16px;display:grid;gap:10px;font-size:.88rem;color:var(--ink-2)}
+.side-stats b{color:var(--ink);font-weight:600}
+.link-btn{border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;text-underline-offset:3px;font-size:.88rem;text-align:left}
+.sync{border-top:1px solid var(--line);padding-top:16px;display:grid;gap:8px;font-size:.85rem;color:var(--ink-2)}
+.sync-row{display:flex;align-items:center;gap:8px}
+.sync .dot{width:9px;height:9px;border-radius:50%;background:var(--ink-3);flex:none}
+.sync .dot.on{background:var(--true)} .sync .dot.busy{background:var(--note-line)} .sync .dot.err{background:var(--false)}
+.sync-profile{display:grid;grid-template-columns:auto 1fr auto;gap:6px;align-items:center}
+.sync-profile input{font:inherit;font-size:.85rem;padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--surface);color:var(--ink);min-width:0}
+.sync-profile .btn{padding:5px 8px;font-size:.8rem}
+.sync-hint{font-size:.78rem;color:var(--ink-3)}
+.sync-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sync-actions .btn{padding:6px 8px;font-size:.8rem}
+#themeGroup{grid-template-columns:1fr 1fr 1fr}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:22px}
+.toolbar .spacer{flex:1}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.85rem;color:var(--ink-2)}
+.chip[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.btn{border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;padding:9px 14px;font-weight:500;font-size:.92rem}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.progress{display:flex;align-items:center;gap:14px;margin-bottom:14px;color:var(--ink-2);font-size:.88rem}
+.progress .track{flex:1;height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.progress .track i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.card-head{padding:22px 26px 6px;display:grid;gap:6px}
+.card-head .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.card-head h2{font-size:1.5rem;font-weight:700;line-height:1.2}
+.card-head .stem{font-size:1.05rem;color:var(--ink-2);margin:4px 0 0}
+
+.fig{margin:10px 26px 2px;padding:12px 14px 8px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2)}
+.fig svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto;font-family:inherit}
+.fig figcaption{font-size:.8rem;color:var(--ink-3);text-align:center;margin-top:6px}
+.items{list-style:none;margin:0;padding:12px 16px 6px;display:grid;gap:8px}
+.item{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:start;padding:12px 10px;border-radius:10px;border:1px solid transparent}
+.item .letter{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;color:var(--ink-3);padding-top:2px}
+.item .text{font-size:.98rem}
+.rf{display:flex;gap:6px}
+.rf button{border:1px solid var(--line-strong);background:var(--surface);border-radius:7px;min-width:44px;padding:6px 10px;font-weight:600;font-size:.85rem;color:var(--ink-2)}
+.rf button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.item.correct{background:var(--true-soft);border-color:color-mix(in srgb,var(--true) 40%,transparent)}
+.item.wrong{background:var(--false-soft);border-color:color-mix(in srgb,var(--false) 40%,transparent)}
+.item.skipped{background:var(--surface-2)}
+.item.revealed .rf button{pointer-events:none;opacity:.4;background:var(--surface);border-color:var(--line);color:var(--ink-3)}
+.item.revealed .rf button.is-answer{opacity:1;background:var(--true);border-color:var(--true);color:#fff}
+.item.revealed .rf button.is-wrong-pick{opacity:1;background:var(--false);border-color:var(--false);color:#fff;text-decoration:line-through}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:2px 9px;border-radius:999px;margin-right:6px;vertical-align:middle}
+.badge.ok{background:var(--true);color:#fff} .badge.no{background:var(--false);color:#fff} .badge.skip{background:var(--line-strong);color:var(--ink)}
+.verdict .fact{display:block;margin:4px 0 2px;color:var(--ink)}
+.verdict .fact b{font-weight:600}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:0 26px 6px;font-size:.78rem;color:var(--ink-3)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend .lg-ok::before{background:var(--true)} .legend .lg-no::before{background:var(--false)}
+.verdict{grid-column:2/-1;font-size:.9rem;color:var(--ink-2);margin-top:2px}
+.verdict b{font-weight:600}
+.verdict b.t{color:var(--true)} .verdict b.f{color:var(--false)}
+
+.card-foot{padding:10px 26px 22px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;border-top:1px solid var(--line);margin-top:8px}
+.card-foot .score{margin-left:auto;font-size:.92rem;color:var(--ink-2)}
+.card-foot .score b{font-size:1.1rem;color:var(--ink)}
+
+.learn{display:grid;gap:12px;padding:0 16px 18px}
+.keypoint{background:var(--formula);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px}
+.keypoint .eyebrow{color:var(--accent)}
+.keypoint p{margin:4px 0 0;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.9rem;line-height:1.55}
+.note{background:var(--note);border:1px solid var(--note-line);color:var(--note-ink);border-radius:10px;padding:14px 16px 14px 18px;position:relative}
+.note .eyebrow{color:var(--note-ink);opacity:.8}
+.note p{margin:6px 0 0;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:1.05rem;font-weight:500;line-height:1.6;overflow-wrap:anywhere}
+.source{font-size:.8rem;color:var(--ink-3);padding:0 2px}
+.source::before{content:"Quelle · "}
+
+.summary{display:grid;gap:18px}
+.summary .big{display:flex;gap:24px;align-items:baseline;flex-wrap:wrap}
+.summary .big .num{font-family:"Bricolage Grotesque",sans-serif;font-size:3.2rem;font-weight:700;line-height:1}
+.summary .big .sub{color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600}
+td.num{text-align:right}
+.table-wrap{overflow-x:auto}
+
+.mn-list{display:grid;gap:10px}
+.mn-list h3{font-size:1rem;margin:18px 0 4px;color:var(--ink-2);font-weight:600}
+.mn{display:grid;grid-template-columns:minmax(120px,200px) 1fr;gap:6px 14px;align-items:baseline;background:var(--note);border:1px solid var(--note-line);color:var(--note-ink);border-radius:10px;padding:12px 14px}
+.mn .law{font-size:.74rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;opacity:.85;overflow-wrap:anywhere}
+.mn p{margin:0;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:1rem;font-weight:500;line-height:1.55;overflow-wrap:anywhere}
+.mn button{grid-column:1/-1;justify-self:start}
+
+.empty{padding:40px;text-align:center;color:var(--ink-2)}
+.kbd{font-family:"IBM Plex Mono",monospace;font-size:.75rem;border:1px solid var(--line-strong);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--ink-2)}
+.hint{font-size:.8rem;color:var(--ink-3);margin-top:14px}
+
+.menu-btn{display:none}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  aside #topicsWrap,aside .side-stats,aside .sync{display:none}
+  aside.open #topicsWrap{display:block} aside.open .side-stats,aside.open .sync{display:grid}
+  aside{gap:14px;padding:16px 16px}
+  .brand p{display:none}
+  .menu-btn{display:inline-block}
+  main{padding:18px 14px 60px}
+  .card-head{padding:18px 16px 4px}
+  .card-foot{padding:10px 16px 18px}
+  .item{grid-template-columns:22px minmax(0,1fr);}
+  .rf{grid-column:2}
+  .mn{grid-template-columns:1fr}
+  .mn .law{font-size:.7rem}
+  .mn-list{padding:6px 14px 20px !important}
+  .note{padding:12px 14px}
+  .note p{font-size:1.02rem}
+  .learn{padding:0 10px 16px}
+  .keypoint p{font-size:.86rem}
+  .legend{padding:0 16px 6px}
+  .fig{margin:8px 10px 2px;padding:8px 6px 6px}
+  .toolbar{gap:6px}
+  .toolbar .btn,.toolbar .chip{font-size:.8rem;padding:6px 10px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+<aside id="side">
+  <div class="brand">
+    <div class="eyebrow">EDAIC Part I · Paper A</div>
+    <h1>Gesetze &amp; Prinzipien</h1>
+    <p>246 Fragen im Multiple-True/False-Format, 1230 Aussagen. Physiologie, Physik, Messtechnik, Kurven, Statistik.</p>
+    <button class="btn menu-btn" id="menuBtn" style="margin-top:10px">Themen &amp; Statistik</button>
+  </div>
+  <div class="modes" role="group" aria-label="Modus">
+    <button id="modeLearn" aria-pressed="true">Lernmodus</button>
+    <button id="modeExam" aria-pressed="false">Prüfungsmodus</button>
+  </div>
+  <div id="topicsWrap">
+    <div class="eyebrow" style="margin-bottom:8px">Themen</div>
+    <div class="topics" id="topics"></div>
+  </div>
+  <div class="side-stats" id="sideStats"></div>
+  <div class="sync" id="sync">
+    <div class="eyebrow">Darstellung</div>
+    <div class="modes" role="group" aria-label="Farbschema" id="themeGroup">
+      <button data-theme="auto" aria-pressed="true">Auto</button>
+      <button data-theme="light" aria-pressed="false">Hell</button>
+      <button data-theme="dark" aria-pressed="false">Dunkel</button>
+    </div>
+    <div class="eyebrow" style="margin-top:6px">Speicherung</div>
+    <div class="sync-row"><span class="dot on" id="syncDot"></span><span id="syncText">Lokal auf diesem Gerät</span></div>
+    <div class="sync-actions">
+      <button class="btn" id="exportBtn" type="button">Fortschritt exportieren</button>
+      <button class="btn" id="importBtn" type="button">Importieren</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+    <div class="sync-hint" id="syncHint">Der Fortschritt bleibt im Browser dieses Geräts. Für andere Geräte: exportieren und dort importieren (wird zusammengeführt).</div>
+    <div class="sync-hint" id="installHint" hidden><button class="link-btn" id="installBtn" type="button">Als App installieren</button></div>
+    <div class="sync-hint" id="versionHint">Version c0850016 · 246 Fragen</div>
+  </div>
+</aside>
+
+<main>
+  <div class="toolbar">
+    <button class="chip" id="shuffleBtn" aria-pressed="false">Zufällige Reihenfolge</button>
+    <button class="chip" id="wrongOnlyBtn" aria-pressed="false">Nur falsch beantwortete</button>
+    <button class="chip" id="unansweredBtn" aria-pressed="false">Nur offene</button>
+    <button class="chip" id="instantBtn" aria-pressed="true" title="Im Lernmodus: jede Aussage wird sofort nach dem Anklicken aufgelöst">Sofort-Feedback</button>
+    <span class="spacer"></span>
+    <button class="btn" id="mnBtn">Merksprüche</button>
+    <button class="btn" id="resetBtn">Fortschritt löschen</button>
+  </div>
+  <div class="progress" id="progress"></div>
+  <div id="view"></div>
+  <p class="hint" id="hint"><span class="kbd">1</span>–<span class="kbd">5</span> Aussage wählen · <span class="kbd">R</span>/<span class="kbd">F</span> Richtig/Falsch · <span class="kbd">Enter</span> Auswerten / Weiter · <span class="kbd">→</span>/<span class="kbd">←</span> Nächste/Vorherige</p>
+</main>
+</div>
+
+<script>
+(function(){
+const Q = window.EDAIC_QUESTIONS;
+const TOPICS = [...new Set(Q.map(q=>q.topic))];
+const LETTERS = ['A','B','C','D','E'];
+const KEY='edaic-gesetze-quiz-v1';
+
+// ---------- state ----------
+let state = load() || {mode:'learn', answers:{}, exam:null};
+// answers[id] = {picks:[bool|null x5], revealed:bool, correct:n}
+let ui = {topic:'all', shuffle:false, wrongOnly:false, unanswered:false, order:[], idx:0, view:'quiz', instant:true};
+try{ const v=localStorage.getItem('edaic-instant'); if(v!==null) ui.instant = v==='1'; }catch(e){}
+let focusItem = 0;
+
+function load(){ try{ const s=localStorage.getItem(KEY); return s?JSON.parse(s):null; }catch(e){ return null; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} schedulePush(); }
+
+function byId(id){ return Q.find(q=>q.id===id); }
+function ans(id){ return state.answers[id]; }
+function isWrong(id){ const a=ans(id); return a && a.revealed && a.correct<5; }
+
+let orderKey='';
+function buildOrder(force){
+  const key=[ui.topic,ui.shuffle,ui.wrongOnly,ui.unanswered].join('|');
+  if(!force && key===orderKey && ui.order.length){ ui.idx=Math.min(ui.idx, ui.order.length-1); return; }
+  orderKey=key;
+  let list = Q.filter(q=> ui.topic==='all' || q.topic===ui.topic);
+  if(ui.wrongOnly) list = list.filter(q=>isWrong(q.id));
+  if(ui.unanswered) list = list.filter(q=>!(ans(q.id)&&ans(q.id).revealed));
+  let ids = list.map(q=>q.id);
+  if(ui.shuffle){ for(let i=ids.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [ids[i],ids[j]]=[ids[j],ids[i]]; } }
+  ui.order = ids; ui.idx = Math.min(ui.idx, Math.max(0,ids.length-1));
+}
+
+// ---------- sidebar ----------
+function renderTopics(){
+  const el=document.getElementById('topics'); el.innerHTML='';
+  const mk=(label,val,count)=>{
+    const done=Q.filter(q=>(val==='all'||q.topic===val)&&ans(q.id)&&ans(q.id).revealed).length;
+    const b=document.createElement('button'); b.className='topic'; b.setAttribute('aria-pressed', ui.topic===val);
+    b.innerHTML=`<span>${label}</span><span class="n tnum">${done}/${count}</span><span class="bar"><i style="width:${count?done/count*100:0}%"></i></span>`;
+    b.onclick=()=>{ ui.topic=val; ui.idx=0; ui.view='quiz'; render(); };
+    el.appendChild(b);
+  };
+  mk('Alle Themen','all',Q.length);
+  TOPICS.forEach(t=>mk(t,t,Q.filter(q=>q.topic===t).length));
+}
+function renderSideStats(){
+  const done=Object.values(state.answers).filter(a=>a.revealed);
+  const items=done.length*5, correct=done.reduce((s,a)=>s+a.correct,0);
+  const pct=items?Math.round(correct/items*100):0;
+  const wrongQ=Q.filter(q=>isWrong(q.id)).length;
+  document.getElementById('sideStats').innerHTML=`
+    <div>Bearbeitet: <b class="tnum">${done.length}</b> von ${Q.length} Fragen</div>
+    <div>Richtige Aussagen: <b class="tnum">${correct}</b> / ${items} <span class="tnum">(${pct} %)</span></div>
+    <div>Fragen mit Fehlern: <b class="tnum">${wrongQ}</b></div>
+    <div style="color:var(--ink-3);font-size:.8rem">Im echten EDAIC zählt jede Aussage einen Punkt, es gibt keine Minuspunkte. Ziel: dauerhaft über 75 %.</div>`;
+}
+
+// ---------- quiz card ----------
+function renderProgress(){
+  const p=document.getElementById('progress');
+  if(ui.view!=='quiz'||!ui.order.length){ p.innerHTML=''; return; }
+  const pos=ui.idx+1, n=ui.order.length;
+  const doneInSet=ui.order.filter(id=>ans(id)&&ans(id).revealed).length;
+  p.innerHTML=`<span class="tnum">Frage ${pos} / ${n}</span><span class="track"><i style="width:${doneInSet/n*100}%"></i></span><span class="tnum">${doneInSet} ausgewertet</span>`;
+}
+
+function renderQuestion(){
+  const view=document.getElementById('view');
+  if(!ui.order.length){ view.innerHTML=`<div class="card"><div class="empty">Keine Fragen für diese Auswahl. Filter zurücksetzen oder anderes Thema wählen.</div></div>`; return; }
+  const q=byId(ui.order[ui.idx]);
+  const a=state.answers[q.id] || {picks:[null,null,null,null,null], revealed:false, correct:0};
+  const exam = state.mode==='exam';
+  const show = a.revealed && (!exam || (state.exam && state.exam.finished));
+  const instant = ui.instant && !exam;   // Lernmodus: jede Aussage sofort auflösen
+
+  const items=q.items.map((it,i)=>{
+    const pick=a.picks[i];
+    const showItem = show || (instant && pick!==null);
+    const RF = v => v ? 'Richtig' : 'Falsch';
+    let cls='item', verdict='';
+    if(showItem){
+      cls+=' revealed';
+      const fact = `<span class="fact">Die Aussage ist <b>${RF(it.answer)}</b>.</span>`;
+      if(pick===null){ cls+=' skipped'; verdict=`<div class="verdict"><span class="badge skip">Nicht beantwortet</span>${fact}${esc(it.explanation)}</div>`; }
+      else if(pick===it.answer){ cls+=' correct'; verdict=`<div class="verdict"><span class="badge ok">✓ Richtig beantwortet</span>${fact}${esc(it.explanation)}</div>`; }
+      else { cls+=' wrong'; verdict=`<div class="verdict"><span class="badge no">✗ Falsch beantwortet</span><span class="fact">Du hast <b>${RF(pick)}</b> gewählt – die Aussage ist aber <b>${RF(it.answer)}</b>.</span>${esc(it.explanation)}</div>`; }
+    }
+    const btnCls = v => !showItem ? '' : (it.answer===v ? 'is-answer' : (pick===v ? 'is-wrong-pick' : ''));
+    return `<li class="${cls}" data-i="${i}" tabindex="0" aria-label="Aussage ${LETTERS[i]}">
+      <span class="letter">${LETTERS[i]}</span>
+      <span class="text">${esc(it.text)}</span>
+      <span class="rf" role="group" aria-label="Antwort">
+        <button data-i="${i}" data-v="true" aria-pressed="${pick===true}" class="${btnCls(true)}" aria-label="Richtig">R</button>
+        <button data-i="${i}" data-v="false" aria-pressed="${pick===false}" class="${btnCls(false)}" aria-label="Falsch">F</button>
+      </span>${verdict}</li>`;
+  }).join('');
+  const anyShown = show || (instant && a.picks.some(p=>p!==null));
+  const legend = anyShown ? `<div class="legend"><span class="lg-ok">Lösung</span><span class="lg-no">Deine falsche Antwort</span></div>` : '';
+
+  const answered=a.picks.filter(p=>p!==null).length;
+  let foot='';
+  if(!a.revealed){
+    foot=`<button class="btn primary" id="evalBtn">${exam?'Antwort speichern':(instant?'Auswerten (Rest aufdecken)':'Auswerten')}</button>
+          <button class="btn" id="skipBtn">Überspringen</button>
+          <span class="score tnum">${answered}/5 beantwortet${instant?' · wird nach der 5. Aussage automatisch ausgewertet':''}</span>`;
+  } else {
+    foot=`<button class="btn" id="prevBtn" ${ui.idx===0?'disabled':''}>← Zurück</button>
+          <button class="btn primary" id="nextBtn" ${ui.idx>=ui.order.length-1?'disabled':''}>Weiter →</button>
+          ${!exam?`<button class="btn" id="retryBtn">Frage zurücksetzen</button>`:''}
+          <span class="score">${show?`<b class="tnum">${a.correct}</b> / 5 richtig`:'gespeichert'}</span>`;
+  }
+  if(exam && state.exam && !state.exam.finished){
+    foot+=`<button class="btn" id="finishBtn" style="margin-left:8px">Prüfung beenden &amp; auswerten</button>`;
+  }
+
+  const learn = show ? `<div class="learn">
+      <div class="keypoint"><div class="eyebrow">Kernaussage</div><p>${esc(q.keypoint)}</p></div>
+      <div class="note"><div class="eyebrow">Merkspruch</div><p>${esc(q.mnemonic)}</p></div>
+      <div class="source">${esc(q.source)}</div>
+    </div>` : '';
+
+  view.innerHTML=`<article class="card">
+    <div class="card-head">
+      <div class="meta"><span class="eyebrow">${esc(q.topic)}</span><span class="eyebrow tnum" style="color:var(--ink-3)">Nr. ${q.id}</span></div>
+      <h2>${esc(q.law)}</h2>
+      <p class="stem">${esc(q.stem)}</p>
+    </div>
+    ${q.figure?`<figure class="fig">${q.figure}<figcaption>${esc(q.figcaption||'')}</figcaption></figure>`:''}
+    <ol class="items">${items}</ol>
+    ${legend}
+    ${learn}
+    <div class="card-foot">${foot}</div>
+  </article>`;
+
+  // wire
+  view.querySelectorAll('.rf button').forEach(b=>b.onclick=()=>{
+    if(a.revealed) return;
+    const i=+b.dataset.i, v=b.dataset.v==='true';
+    if(instant && a.picks[i]!==null) return;            // bereits aufgelöst
+    a.picks[i] = (a.picks[i]===v)? null : v; a.t=Date.now();
+    state.answers[q.id]=a; save(); focusItem=i;
+    if(instant && a.picks.every(p=>p!==null)){ evaluate(q,a); return; }
+    renderQuestion(); renderProgress();
+  });
+  const ev=document.getElementById('evalBtn'); if(ev) ev.onclick=()=>evaluate(q,a);
+  const sk=document.getElementById('skipBtn'); if(sk) sk.onclick=()=>next();
+  const nx=document.getElementById('nextBtn'); if(nx) nx.onclick=()=>next();
+  const pv=document.getElementById('prevBtn'); if(pv) pv.onclick=()=>prev();
+  const rt=document.getElementById('retryBtn'); if(rt) rt.onclick=()=>{ state.answers[q.id]={picks:[null,null,null,null,null],revealed:false,correct:0,t:Date.now()}; save(); render(); };
+  const fn=document.getElementById('finishBtn'); if(fn) fn.onclick=finishExam;
+  const li=view.querySelector(`.item[data-i="${focusItem}"]`); if(li) li.focus({preventScroll:true});
+}
+
+function evaluate(q,a){
+  a.correct = q.items.reduce((s,it,i)=> s + (a.picks[i]===it.answer?1:0), 0);
+  a.revealed = true; a.t=Date.now(); state.answers[q.id]=a; save();
+  focusItem=0; render();
+}
+function matches(id){ if(ui.wrongOnly) return isWrong(id); if(ui.unanswered) return !(ans(id)&&ans(id).revealed); return true; }
+function next(){
+  let j=ui.idx+1;
+  while(j<ui.order.length && !matches(ui.order[j])) j++;
+  if(j<ui.order.length){ ui.idx=j; focusItem=0; render(); }
+  else if(ui.idx<ui.order.length-1){ ui.idx=ui.order.length-1; focusItem=0; render(); }
+}
+function prev(){ if(ui.idx>0){ ui.idx--; focusItem=0; render(); } }
+
+// ---------- exam ----------
+function startExam(){
+  state.mode='exam'; state.stateT=Date.now();
+  state.exam={finished:false, ids:[]};
+  // exam session: current filter, keep answers separate by clearing only exam ids? Simpler: exam uses its own answer store
+  state.examAnswersBackup = state.answers; state.answers={};
+  save(); ui.idx=0; ui.view='quiz'; buildOrder(true); render();
+}
+function finishExam(){
+  state.exam.finished=true; state.stateT=Date.now(); save(); ui.view='summary'; render();
+}
+function leaveExam(){
+  state.mode='learn'; state.stateT=Date.now();
+  if(state.examAnswersBackup){ state.answers=state.examAnswersBackup; delete state.examAnswersBackup; }
+  state.exam=null; save(); ui.view='quiz'; buildOrder(true); render();
+}
+function renderSummary(){
+  const view=document.getElementById('view');
+  const ids=ui.order; const done=ids.filter(id=>ans(id)&&ans(id).revealed);
+  const total=ids.length*5, correct=done.reduce((s,id)=>s+ans(id).correct,0);
+  const pct=total?Math.round(correct/total*100):0;
+  const rows=TOPICS.map(t=>{
+    const tids=ids.filter(id=>byId(id).topic===t); if(!tids.length) return '';
+    const c=tids.reduce((s,id)=>s+((ans(id)&&ans(id).correct)||0),0);
+    return `<tr><td>${esc(t)}</td><td class="num tnum">${tids.length}</td><td class="num tnum">${c} / ${tids.length*5}</td><td class="num tnum">${Math.round(c/(tids.length*5)*100)} %</td></tr>`;
+  }).join('');
+  const weak=ids.filter(id=>isWrong(id)).sort((a,b)=>ans(a).correct-ans(b).correct).slice(0,10)
+    .map(id=>`<li><button class="link-btn" data-id="${id}">${esc(byId(id).law)}</button> <span class="tnum" style="color:var(--ink-3)">${ans(id).correct}/5</span></li>`).join('');
+  view.innerHTML=`<article class="card"><div class="card-head"><div class="eyebrow">Prüfungsergebnis</div><h2>Auswertung</h2></div>
+    <div class="summary" style="padding:10px 26px 26px">
+      <div class="big"><span class="num tnum">${pct} %</span><span class="sub"><b class="tnum">${correct}</b> von ${total} Aussagen richtig · ${done.length} von ${ids.length} Fragen beantwortet</span></div>
+      <div class="table-wrap"><table><thead><tr><th>Thema</th><th class="num">Fragen</th><th class="num">Richtig</th><th class="num">Quote</th></tr></thead><tbody>${rows}</tbody></table></div>
+      ${weak?`<div><div class="eyebrow" style="margin-bottom:6px">Schwächste Fragen – zum Nachlesen anklicken</div><ol style="margin:0;padding-left:20px;display:grid;gap:4px">${weak}</ol></div>`:''}
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" id="reviewBtn">Fragen mit Lösungen durchgehen</button><button class="btn" id="leaveBtn">Zurück in den Lernmodus</button></div>
+    </div></article>`;
+  view.querySelectorAll('.link-btn[data-id]').forEach(b=>b.onclick=()=>{ ui.idx=ui.order.indexOf(+b.dataset.id); ui.view='quiz'; render(); });
+  document.getElementById('reviewBtn').onclick=()=>{ ui.idx=0; ui.view='quiz'; render(); };
+  document.getElementById('leaveBtn').onclick=leaveExam;
+}
+
+// ---------- mnemonics ----------
+function renderMnemonics(){
+  const view=document.getElementById('view');
+  const groups=TOPICS.filter(t=>ui.topic==='all'||t===ui.topic).map(t=>{
+    const qs=Q.filter(q=>q.topic===t);
+    return `<h3>${esc(t)}</h3>`+qs.map(q=>`<div class="mn"><span class="law">${esc(q.law)}</span><p>${esc(q.mnemonic)}</p></div>`).join('');
+  }).join('');
+  view.innerHTML=`<article class="card"><div class="card-head"><div class="eyebrow">Sammlung</div><h2>Alle Merksprüche</h2><p class="stem">Zum Wiederholen vor der Prüfung – nach Thema sortiert.</p></div>
+    <div class="mn-list" style="padding:6px 26px 26px">${groups}</div>
+    <div class="card-foot"><button class="btn primary" id="backBtn">Zurück zum Quiz</button></div></article>`;
+  document.getElementById('backBtn').onclick=()=>{ ui.view='quiz'; render(); };
+}
+
+// ---------- render ----------
+function render(){
+  buildOrder(); renderTopics(); renderSideStats(); renderProgress();
+  document.getElementById('modeLearn').setAttribute('aria-pressed', state.mode==='learn');
+  document.getElementById('modeExam').setAttribute('aria-pressed', state.mode==='exam');
+  document.getElementById('shuffleBtn').setAttribute('aria-pressed', ui.shuffle);
+  document.getElementById('wrongOnlyBtn').setAttribute('aria-pressed', ui.wrongOnly);
+  document.getElementById('unansweredBtn').setAttribute('aria-pressed', ui.unanswered);
+  const ib=document.getElementById('instantBtn'); ib.setAttribute('aria-pressed', ui.instant); ib.disabled = state.mode==='exam'; ib.title = state.mode==='exam' ? 'Im Prüfungsmodus gibt es kein Feedback bis zur Auswertung' : 'Im Lernmodus: jede Aussage wird sofort nach dem Anklicken aufgelöst';
+  document.getElementById('hint').hidden = ui.view!=='quiz';
+  if(ui.view==='summary') renderSummary();
+  else if(ui.view==='mn') renderMnemonics();
+  else renderQuestion();
+}
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// ---------- controls ----------
+document.getElementById('modeLearn').onclick=()=>{ if(state.mode==='exam') leaveExam(); else render(); };
+document.getElementById('modeExam').onclick=()=>{ if(state.mode!=='exam'){ if(confirm('Prüfungsmodus starten? Du beantwortest alle Fragen der aktuellen Auswahl ohne Feedback und bekommst am Ende die Auswertung. Dein Lernfortschritt bleibt erhalten.')) startExam(); } };
+document.getElementById('shuffleBtn').onclick=()=>{ ui.shuffle=!ui.shuffle; ui.idx=0; buildOrder(true); render(); };
+document.getElementById('wrongOnlyBtn').onclick=()=>{ ui.wrongOnly=!ui.wrongOnly; if(ui.wrongOnly) ui.unanswered=false; ui.idx=0; ui.view='quiz'; render(); };
+document.getElementById('instantBtn').onclick=()=>{ ui.instant=!ui.instant; try{ localStorage.setItem('edaic-instant', ui.instant?'1':'0'); }catch(e){} render(); };
+document.getElementById('unansweredBtn').onclick=()=>{ ui.unanswered=!ui.unanswered; if(ui.unanswered) ui.wrongOnly=false; ui.idx=0; ui.view='quiz'; render(); };
+document.getElementById('mnBtn').onclick=()=>{ ui.view = ui.view==='mn' ? 'quiz' : 'mn'; render(); };
+document.getElementById('resetBtn').onclick=()=>{ if(confirm('Gesamten Fortschritt löschen?')){ state={mode:'learn',answers:{},exam:null,resetAt:Date.now(),stateT:Date.now()}; save(); ui.idx=0; ui.view='quiz'; buildOrder(true); render(); } };
+document.getElementById('menuBtn').onclick=()=>document.getElementById('side').classList.toggle('open');
+
+document.addEventListener('keydown',e=>{
+  if(ui.view!=='quiz' || e.metaKey || e.ctrlKey || e.altKey) return;
+  const tag=(e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select') return;
+  const q=byId(ui.order[ui.idx]); if(!q) return;
+  const a=state.answers[q.id] || {picks:[null,null,null,null,null],revealed:false,correct:0};
+  if(/^[1-5]$/.test(e.key)){ focusItem=+e.key-1; const li=document.querySelector(`.item[data-i="${focusItem}"]`); if(li) li.focus(); e.preventDefault(); }
+  else if(e.key==='ArrowDown'){ focusItem=Math.min(4,focusItem+1); const li=document.querySelector(`.item[data-i="${focusItem}"]`); if(li) li.focus(); e.preventDefault(); }
+  else if(e.key==='ArrowUp'){ focusItem=Math.max(0,focusItem-1); const li=document.querySelector(`.item[data-i="${focusItem}"]`); if(li) li.focus(); e.preventDefault(); }
+  else if((e.key==='r'||e.key==='R'||e.key==='f'||e.key==='F') && !a.revealed){ const inst=ui.instant && state.mode!=='exam'; if(inst && a.picks[focusItem]!==null){ e.preventDefault(); return; } const v=(e.key.toLowerCase()==='r'); a.picks[focusItem]=(a.picks[focusItem]===v)?null:v; a.t=Date.now(); state.answers[q.id]=a; save(); if(focusItem<4) focusItem++; if(inst && a.picks.every(p=>p!==null)){ evaluate(q,a); } else { renderQuestion(); renderProgress(); } e.preventDefault(); }
+  else if(e.key==='Enter'){ if(!a.revealed) evaluate(q,a); else next(); e.preventDefault(); }
+  else if(e.key==='ArrowRight'){ next(); e.preventDefault(); }
+  else if(e.key==='ArrowLeft'){ prev(); e.preventDefault(); }
+});
+document.addEventListener('focusin',e=>{ const li=e.target.closest && e.target.closest('.item'); if(li) focusItem=+li.dataset.i; });
+
+// ---------- lokale Speicherung: Export / Import (Zusammenführung) ----------
+function schedulePush(){}
+function snapshotOf(st){ return JSON.stringify({answers:st.answers||{},mode:st.mode||'learn',exam:st.exam||null,examAnswersBackup:st.examAnswersBackup||null,resetAt:st.resetAt||0,stateT:st.stateT||0}); }
+function mergeRemote(remote){
+  const resetAt=Math.max(state.resetAt||0, remote.resetAt||0);
+  const merged={}; const ids=new Set([...Object.keys(state.answers),...Object.keys(remote.answers||{})]);
+  ids.forEach(id=>{ const l=state.answers[id], r=(remote.answers||{})[id];
+    const pick = (!l)? r : (!r)? l : ((r.t||0)>(l.t||0)? r : l);
+    if(pick && (pick.t||0)>=resetAt) merged[id]=pick; });
+  const next={...state, answers:merged, resetAt:resetAt};
+  if((remote.stateT||0)>(state.stateT||0)){ next.mode=remote.mode||'learn'; next.exam=remote.exam||null; next.examAnswersBackup=remote.examAnswersBackup||undefined; next.stateT=remote.stateT; }
+  if(next.examAnswersBackup===null) delete next.examAnswersBackup;
+  const changed = snapshotOf(next)!==snapshotOf(state);
+  state=next; try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+  return changed;
+}
+function setHint(t){ document.getElementById('syncHint').textContent=t; }
+document.getElementById('exportBtn').onclick=()=>{
+  const body=JSON.parse(snapshotOf(state)); body.exportedAt=new Date().toISOString(); body.app='edaic-gesetze-quiz'; body.version='c0850016';
+  const blob=new Blob([JSON.stringify(body,null,1)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='edaic-fortschritt-'+new Date().toISOString().slice(0,10)+'.json'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500);
+  setHint('Exportiert: '+a.download+' – auf dem anderen Gerät über „Importieren“ einlesen.');
+};
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{ try{ const remote=JSON.parse(rd.result); if(!remote||typeof remote!=='object'||!remote.answers) throw new Error('kein Fortschritts-Export');
+      const before=Object.values(state.answers).filter(a=>a.revealed).length;
+      mergeRemote(remote); render();
+      const after=Object.values(state.answers).filter(a=>a.revealed).length;
+      setHint('Import zusammengeführt: '+after+' ausgewertete Fragen (vorher '+before+'). Neuere Antworten haben Vorrang.'); }
+    catch(err){ setHint('Import fehlgeschlagen: '+err.message); }
+    e.target.value=''; };
+  rd.readAsText(f);
+});
+
+// ---------- Farbschema ----------
+const TKEY='edaic-gesetze-theme';
+function applyTheme(t){
+  if(t==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=t;
+  document.querySelectorAll('#themeGroup button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.theme===t));
+  const dark = t==='dark' || (t==='auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content', dark?'#0F161C':'#F4F6F8');
+  try{ localStorage.setItem(TKEY,t); }catch(e){}
+}
+document.querySelectorAll('#themeGroup button').forEach(b=>b.onclick=()=>applyTheme(b.dataset.theme));
+(function(){ let t='auto'; try{ t=localStorage.getItem(TKEY)||'auto'; }catch(e){} applyTheme(t); })();
+
+// ---------- PWA: Installation & Service Worker ----------
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferredPrompt=e; document.getElementById('installHint').hidden=false; });
+document.getElementById('installBtn').onclick=async()=>{ if(!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; document.getElementById('installHint').hidden=true; };
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').then(reg=>{
+      reg.addEventListener('updatefound',()=>{ const nw=reg.installing; nw&&nw.addEventListener('statechange',()=>{ if(nw.state==='installed' && navigator.serviceWorker.controller){ document.getElementById('versionHint').innerHTML='Neue Version geladen – <button class="link-btn" id="reloadBtn" type="button">jetzt aktualisieren</button>'; document.getElementById('reloadBtn').onclick=()=>location.reload(); } }); });
+    }).catch(()=>{});
+  });
+}
+
+// exam state restore: if a finished exam exists show summary
+if(state.mode==='exam' && state.exam && state.exam.finished) ui.view='summary';
+render();
+})();
+</script>
+</body>
+</html>

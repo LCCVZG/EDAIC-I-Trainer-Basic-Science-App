@@ -1,0 +1,32 @@
+{
+ "name": "EDAIC Gesetze-Quiz",
+ "short_name": "EDAIC Quiz",
+ "description": "246 Übungsfragen zu physiologischen und physikalischen Gesetzen für das EDAIC Part I",
+ "start_url": "./index.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#F4F6F8",
+ "theme_color": "#1F4E8C",
+ "lang": "de",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512-maskable.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
