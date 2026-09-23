@@ -1,7 +1,7 @@
 {
  "name": "EDAIC Gesetze-Quiz",
  "short_name": "EDAIC Quiz",
- "description": "499 Übungsfragen zu Gesetzen und Prinzipien für das EDAIC Part I",
+ "description": "571 Übungsfragen zu Gesetzen und Prinzipien für das EDAIC Part I",
  "start_url": "./index.html",
  "scope": "./",
  "display": "standalone",

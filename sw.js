@@ -1,6 +1,6 @@
-// EDAIC Gesetze-Quiz – Service Worker (Version 18ea2889)
-const CACHE = 'edaic-gesetze-18ea2889';
-const ASSETS = ['./', './index.html', './questions.js?v=18ea2889', './manifest.webmanifest', './icons/icon.svg',
+// EDAIC Gesetze-Quiz – Service Worker (Version e368d687)
+const CACHE = 'edaic-gesetze-e368d687';
+const ASSETS = ['./', './index.html', './questions.js?v=e368d687', './manifest.webmanifest', './icons/icon.svg',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-512-maskable.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== CACHE).map(x => caches.delete(x)))).then(() => self.clients.claim())); });

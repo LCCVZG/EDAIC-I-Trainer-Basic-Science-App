@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>EDAIC Gesetze-Quiz</title>
-<meta name="description" content="499 Übungsfragen (Multiple True/False), Fallserien und Zeichenaufgaben zu physiologischen und physikalischen Gesetzen für das EDAIC Part I.">
+<meta name="description" content="571 Übungsaufgaben (Multiple True/False), Fallserien, Rechen- und Zeichenaufgaben zu physiologischen und physikalischen Gesetzen für das EDAIC Part I.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F4F6F8">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -171,6 +171,25 @@ main{padding:24px 32px 90px;max-width:880px;width:100%;margin:0 auto}
 .card-foot .score b{font-size:1.15rem;color:var(--ink)}
 
 .learn{display:grid;gap:12px;padding:0 16px 18px}
+.cparts{list-style:none;margin:0;padding:4px 16px 6px;display:grid;gap:8px}
+.cpart{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;padding:12px 10px;border-radius:11px;border:1px solid var(--line);background:var(--surface)}
+.cpart .letter{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;color:var(--ink-3);padding-top:2px}
+.cp-prompt{display:block;font-size:.98rem;margin-bottom:8px}
+.cp-in{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cp-in input{font:600 1.1rem/1.2 "IBM Plex Mono",ui-monospace,monospace;width:min(190px,100%);padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.cp-in input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.cp-in input.bad{border-color:var(--false)}
+.cp-in input:disabled{opacity:1;color:var(--ink)}
+.cp-unit{color:var(--ink-2);font-size:.95rem}
+.cpart.correct{background:var(--true-soft);border-color:color-mix(in srgb,var(--true) 40%,transparent)}
+.cpart.wrong{background:var(--false-soft);border-color:color-mix(in srgb,var(--false) 40%,transparent)}
+.cpart.skipped{background:var(--surface-2)}
+.cpart.revealed{animation:reveal .45s ease-out both}
+.cpart.wrong.revealed .cp-in{animation:shake .4s ease-in-out both;animation-delay:inherit}
+.cpart .verdict{margin-top:8px}
+.cp-hint{padding:4px 16px 10px;display:grid;gap:8px;justify-items:start}
+.cp-formula{background:var(--formula);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:10px 14px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.9rem;line-height:1.55;white-space:pre-wrap;animation:fadeUp .3s ease-out both}
+.steps-sol{margin:6px 0 0;padding-left:22px;display:grid;gap:4px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86rem;line-height:1.55}
 .learn > *{animation:fadeUp .4s ease-out both}
 .learn > *:nth-child(2){animation-delay:.08s} .learn > *:nth-child(3){animation-delay:.16s} .learn > *:nth-child(4){animation-delay:.24s}
 .keypoint{background:var(--formula);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px}
@@ -292,6 +311,7 @@ tr.click{cursor:pointer} tr.click:hover{background:var(--surface-2)}
 
 .menu-btn{display:none}
 @media (max-width:900px){
+  .cparts{padding:4px 8px 6px} .cpart{grid-template-columns:22px minmax(0,1fr);gap:8px 10px;padding:10px 8px} .cp-hint{padding:4px 8px 10px}
   .app{grid-template-columns:1fr}
   aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);gap:12px;padding:14px 14px}
   aside .collapsible,aside .collapsible.side-block{display:none}
@@ -371,7 +391,7 @@ tr.click{cursor:pointer} tr.click:hover{background:var(--surface-2)}
     </div>
     <div class="hint-s" id="syncHint"></div>
     <div class="hint-s" id="installHint" hidden><button class="link-btn" id="installBtn" type="button">Als App installieren</button></div>
-    <div class="hint-s" id="versionHint">Version 18ea2889</div>
+    <div class="hint-s" id="versionHint">Version e368d687</div>
   </div>
 </aside>
 
@@ -398,7 +418,7 @@ tr.click{cursor:pointer} tr.click:hover{background:var(--surface-2)}
 <div class="toasts" id="toasts"></div>
 <canvas id="confetti"></canvas>
 
-<script src="questions.js?v=18ea2889"></script>
+<script src="questions.js?v=e368d687"></script>
 <script>
 (function(){
 'use strict';
@@ -414,7 +434,8 @@ const RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').m
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const isDraw=q=>q && q.type==='draw';
-$('brandSub').textContent = Q.length+' Fragen · Physiologie, Physik, Messtechnik, Kurven, Statistik, Fallserien und Zeichenaufgaben.';
+const isCalc=q=>q && q.type==='calc';
+$('brandSub').textContent = Q.length+' Aufgaben · Physiologie, Physik, Messtechnik, Kurven, Statistik, Fallserien, Rechen- und Zeichenaufgaben.';
 
 // ---------- State ----------
 function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
@@ -434,6 +455,7 @@ const ans = id => state.answers[id];
 const isWrong = id => { const a=ans(id); return a && a.revealed && a.correct<5; };
 const isDone = id => { const a=ans(id); return a && a.revealed; };
 const blank = () => ({picks:[null,null,null,null,null], revealed:false, correct:0});
+const blankFor = (q,rev) => isDraw(q)? {draw:{strokes:[],labels:{}},revealed:!!rev,correct:0} : isCalc(q)? {vals:q.parts.map(()=>''),revealed:!!rev,correct:0} : {picks:[null,null,null,null,null],revealed:!!rev,correct:0};
 
 let ui = {view:'quiz', topic:'all', series:null, shuffle:false, wrongOnly:false, unanswered:false, order:[], idx:0, dir:0};
 let focusItem=0, orderKey='';
@@ -487,6 +509,13 @@ function scoreDraw(q, draw){
   return {shape, dev, lab, okN, pts};
 }
 
+function parseNum(v){ if(v==null) return NaN; let t=String(v).trim().replace(/\s|\u202f|\u00a0/g,'').replace(/[−–]/g,'-'); if(!t) return NaN;
+  if(t.includes(',') && t.includes('.')) t=t.replace(/\./g,'').replace(',','.'); else t=t.replace(',','.');
+  if(!/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t)) return NaN; return Number(t); }
+function fmtNum(x,d){ return Number(x).toLocaleString('de-DE',{minimumFractionDigits:d||0,maximumFractionDigits:d||0}); }
+function partOk(p,v){ const x=parseNum(v); if(!isFinite(x)) return false; const lim=Math.max((p.tol==null?.05:p.tol)*Math.abs(p.answer), p.abs||0); return Math.abs(x-p.answer)<=lim+1e-12; }
+function scoreCalc(q,vals){ const oks=q.parts.map((p,i)=>partOk(p,(vals||[])[i])); const n=oks.filter(Boolean).length; return {oks,n,pts:Math.round(5*n/q.parts.length)}; }
+
 // ---------- Order (Lernen) ----------
 function inScope(q){ if(ui.series) return q.series===ui.series; return ui.topic==='all' || q.topic===ui.topic; }
 function matches(id){ if(ui.wrongOnly) return isWrong(id); if(ui.unanswered) return !isDone(id); return true; }
@@ -506,8 +535,8 @@ function inRound(){ return ui.view==='round' && R(); }
 function ctxIds(){ return inRound()? R().ids : ui.order; }
 function ctxIdx(){ return inRound()? R().idx : ui.idx; }
 function setIdx(i){ if(inRound()){ R().idx=i; R().t=Date.now(); state.stateT=Date.now(); save(); } else ui.idx=i; }
-function getRec(q){ if(inRound() && R().finished && !(R().recs[q.id]&&R().recs[q.id].revealed)) return isDraw(q)?{draw:{strokes:[],labels:{}},revealed:true,correct:0}:{picks:[null,null,null,null,null],revealed:true,correct:0};
-  if(inRound()) return R().recs[q.id] || (isDraw(q)?{draw:{strokes:[],labels:{}},revealed:false,correct:0}:blank()); return ans(q.id) || (isDraw(q)?{draw:{strokes:[],labels:{}},revealed:false,correct:0}:blank()); }
+function getRec(q){ if(inRound() && R().finished && !(R().recs[q.id]&&R().recs[q.id].revealed)) return blankFor(q,true);
+  const r = inRound()? R().recs[q.id] : ans(q.id); if(r && isCalc(q) && !Array.isArray(r.vals)) r.vals=q.parts.map(()=>''); return r || blankFor(q); }
 function putRec(q, rec){ rec.t=Date.now(); if(inRound()){ R().recs[q.id]=rec; R().t=Date.now(); state.stateT=Date.now(); } else state.answers[q.id]=rec; save(); }
 function showResult(rec){ if(!rec.revealed) return false; if(inRound()) return R().feedback==='each' || R().finished; return true; }
 
@@ -520,7 +549,7 @@ function renderTopics(){
     b.onclick=()=>{ ui.topic=val; ui.series=null; ui.idx=0; ui.dir=0; goLearn(); $('side').classList.remove('open'); };
     el.appendChild(b); };
   mk('Alle Themen','all',Q.map(q=>q.id));
-  TOPICS.forEach(t=>mk(t,t,Q.filter(q=>q.topic===t).map(q=>q.id), t==='Fallserien'?'neu':t==='Graphen zeichnen'?'neu':''));
+  TOPICS.forEach(t=>mk(t,t,Q.filter(q=>q.topic===t).map(q=>q.id), t==='Rechnungen'?'neu':''));
   requestAnimationFrame(()=>el.querySelectorAll('.bar i').forEach(i=>i.style.width=i.dataset.w+'%'));
 }
 function totals(){ const done=Object.entries(state.answers).filter(([id,a])=>a && a.revealed && QMAP.has(+id)); const pts=done.reduce((s,[,a])=>s+(a.correct||0),0); return {n:done.length, pts, max:done.length*5, wrong:done.filter(([,a])=>a.correct<5).length}; }
@@ -563,11 +592,11 @@ function renderQuestion(){
   const head=`<div class="card-head"><div class="meta"><span class="eyebrow">${esc(q.topic)}</span><span class="eyebrow tnum">Nr. ${q.id}</span></div><h2>${esc(q.law)}</h2>${q.series?'':`<p class="stem">${esc(q.stem)}</p>`}</div>`;
   const caseBox = q.series? `<div class="case"><div class="eyebrow">Fallserie · Schritt ${q.step} von ${SERIES[q.series].ids.length}</div><div class="ttl">${esc(q.seriesTitle)}</div><p>${esc(q.caseIntro)}</p><div class="steps">${SERIES[q.series].ids.map((id,i)=>`<i class="${i<q.step?'on':''}"></i>`).join('')}</div></div><div class="card-head" style="padding-top:8px"><p class="stem" style="color:var(--ink)">${esc(q.stem)}</p></div>`:'';
   const fig = q.figure? `<figure class="fig">${q.figure}<figcaption>${esc(q.figcaption||'')}</figcaption></figure>`:'';
-  const body = isDraw(q)? drawBody(q,rec,show) : mtfBody(q,rec,show);
+  const body = isDraw(q)? drawBody(q,rec,show) : isCalc(q)? calcBody(q,rec,show) : mtfBody(q,rec,show);
   const learn = show? learnBlock(q, rec) : '';
   view.innerHTML=`<article class="card ${ui.dir>0?'enter-next':ui.dir<0?'enter-prev':'enter-fade'}" id="qcard">${head}${caseBox}${fig}${body}${learn}<div class="card-foot" id="foot"></div></article>`;
   ui.dir=0;
-  if(isDraw(q)) wireDraw(q,rec,show); else wireMTF(q,rec,show);
+  if(isDraw(q)) wireDraw(q,rec,show); else if(isCalc(q)) wireCalc(q,rec,show); else wireMTF(q,rec,show);
   renderFoot(q,rec,show);
 }
 function mtfBody(q,rec,show){
@@ -584,6 +613,7 @@ function mtfBody(q,rec,show){
 }
 function learnBlock(q, rec){
   let extra='';
+  if(isCalc(q)) extra=`<div class="keypoint solution"><div class="eyebrow">Lösungsweg</div><ol class="steps-sol">${q.solution.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>`;
   if(isDraw(q)) extra=`<div class="keypoint"><div class="eyebrow">Worauf es ankommt</div><ul class="checks">${q.checkpoints.map(c=>`<li>${esc(c)}</li>`).join('')}</ul><p style="font-family:inherit;margin-top:8px">${esc(q.explanation)}</p></div>`;
   return `<div class="learn">${extra}<div class="keypoint"><div class="eyebrow">Kernaussage</div><p>${esc(q.keypoint)}</p></div><div class="note"><div class="eyebrow">Merkspruch</div><p>${esc(q.mnemonic)}</p></div><div class="source">${esc(q.source)}</div></div>`;
 }
@@ -595,6 +625,8 @@ function renderFoot(q,rec,show){
   if(!rec.revealed){
     if(isDraw(q)){ const d=rec.draw||{strokes:[],labels:{}}; const ready=d.strokes.length>0 && Object.keys(d.labels).length===q.labels.length;
       html=`${nav}<button class="btn primary ${ready?'ready':''}" id="evalBtn" ${ready?'':'disabled'}>${inRound()&&R().feedback==='end'?'Speichern':'Prüfen'}</button><button class="btn" id="skipBtn">Überspringen</button><span class="score">${ready?'Bereit zum Prüfen':'Kurve zeichnen und alle '+q.labels.length+' Beschriftungen setzen'}</span>`;
+    } else if(isCalc(q)){ const n=rec.vals.filter(v=>isFinite(parseNum(v))).length, m=q.parts.length, ready=n===m;
+      html=`${nav}<button class="btn primary ${ready?'ready':''}" id="evalBtn" ${ready?'':'disabled'}>${inRound()&&R().feedback==='end'?'Antwort speichern':'Prüfen'}</button><button class="btn" id="skipBtn">Überspringen</button><span class="score tnum">${n}/${m} Ergebnisse eingetragen</span>`;
     } else { const n=rec.picks.filter(p=>p!==null).length;
       html=`${nav}<button class="btn primary ${n===5?'ready':''}" id="evalBtn" ${n<5?'disabled':''}>${inRound()&&R().feedback==='end'?'Antwort speichern':'Auswerten'}</button><button class="btn" id="skipBtn">Überspringen</button><span class="score tnum">${n}/5 beantwortet${n<5?' · Auswertung, sobald alle 5 gewählt sind':''}</span>`; }
   } else {
@@ -603,7 +635,7 @@ function renderFoot(q,rec,show){
   f.innerHTML=html;
   const on=(id,fn)=>{ const e=$(id); if(e) e.onclick=fn; };
   on('prevBtn',prev); on('skipBtn',next); on('nextBtn',()=>{ if(inRound() && last && !R().finished) finishRoundAsk(); else next(); });
-  on('evalBtn',()=>evaluate(q)); on('retryBtn',()=>{ putRec(q, isDraw(q)?{draw:{strokes:[],labels:{}},revealed:false,correct:0}:blank()); render(); });
+  on('evalBtn',()=>evaluate(q)); on('retryBtn',()=>{ putRec(q, blankFor(q)); render(); });
 }
 async function finishRoundAsk(){ const r=R(); const open=r.ids.filter(id=>!(r.recs[id]&&r.recs[id].revealed)).length;
   if(!open || await confirmBox(`Noch <b>${open}</b> offene Fragen – trotzdem auswerten?`,'Auswerten')) finishRound(); }
@@ -622,13 +654,14 @@ function refreshMTF(q,rec){ // ohne Neuaufbau der Karte (keine Animation)
 function evaluate(q){
   const rec=getRec(q);
   if(isDraw(q)){ const s=scoreDraw(q,rec.draw); rec.correct=s.pts; rec.shape=s.shape; rec.labelsOk=s.okN; }
+  else if(isCalc(q)){ if(rec.vals.some(v=>!isFinite(parseNum(v)))) return; rec.correct=scoreCalc(q,rec.vals).pts; }
   else { if(rec.picks.some(p=>p===null)) return; rec.correct=scoreMTF(q,rec.picks); }
   rec.revealed=true; putRec(q,rec);
   if(inRound()){ if(R().feedback==='each'){ state.answers[q.id]=JSON.parse(JSON.stringify(rec)); save(); }
     if(R().feedback==='end'){ toast('Gespeichert'); const r=R(); if(r.idx<r.ids.length-1){ ui.dir=1; setIdx(r.idx+1); } render(); return; } }
   render();
   if(showResult(rec)){ countUp($('scoreNum'), rec.correct, '', 600); if(rec.correct===5){ confetti(); } }
-  const fb=$('foot'); if(fb && window.innerWidth<900){ setTimeout(()=>{ const c=$('qcard').querySelector('.items .item.wrong, .learn'); if(c) c.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'}); },120); }
+  const fb=$('foot'); if(fb && window.innerWidth<900){ setTimeout(()=>{ const c=$('qcard').querySelector('.items .item.wrong, .cpart.wrong, .learn'); if(c) c.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'}); },120); }
 }
 function next(){
   if(inRound()){ const r=R(); if(r.idx<r.ids.length-1){ ui.dir=1; setIdx(r.idx+1); focusItem=0; render(); scrollTopCard(); } return; }
@@ -638,6 +671,28 @@ function next(){
 }
 function prev(){ const i=ctxIdx(); if(i>0){ ui.dir=-1; setIdx(i-1); focusItem=0; render(); scrollTopCard(); } }
 function scrollTopCard(){ const c=$('qcard'); if(c && c.getBoundingClientRect().top<0) c.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'}); }
+
+// ---------- Rechenaufgaben ----------
+function calcBody(q,rec,show){
+  const sc = show? scoreCalc(q,rec.vals):null;
+  const parts=q.parts.map((p,i)=>{ const v=rec.vals[i]||''; let cls='cpart', verdict='';
+    if(show){ const ok=sc.oks[i]; const empty=!isFinite(parseNum(v)); cls+=' revealed '+(empty?'skipped':ok?'correct':'wrong');
+      const tolTxt = p.abs? `± ${fmtNum(p.abs, String(p.abs).split('.')[1]?.length||0)}${p.unit?' '+esc(p.unit):''}` : `± ${Math.round((p.tol==null?.05:p.tol)*100)} %`;
+      verdict=`<div class="verdict"><span class="badge ${empty?'skip':ok?'ok':'no'}">${empty?'Nicht beantwortet':ok?'✓ Richtig':'✗ Daneben'}</span><span class="fact">Lösung: <b class="tnum">${fmtNum(p.answer,p.digits)}${p.unit?' '+esc(p.unit):''}</b>${empty?'':` · deine Eingabe: <span class="tnum">${esc(v)}</span>`} <span class="hint-s">(Toleranz ${tolTxt})</span></span></div>`; }
+    return `<li class="${cls}" style="animation-delay:${show?i*90:0}ms"><span class="letter">${q.parts.length>1?LETTERS[i].toLowerCase()+')':'?'}</span><div class="cp-main"><label class="cp-prompt" for="cv${i}">${esc(p.prompt)}</label><div class="cp-in"><input id="cv${i}" data-i="${i}" type="text" inputmode="decimal" autocomplete="off" enterkeyhint="${i<q.parts.length-1?'next':'done'}" value="${esc(v)}" ${rec.revealed?'disabled':''} placeholder="Zahl" aria-label="${esc(p.prompt)}${p.unit?' in '+esc(p.unit):''}"><span class="cp-unit">${esc(p.unit||'')}</span></div>${verdict}</div></li>`; }).join('');
+  const hint = q.hint? `<div class="cp-hint"><button class="btn ghost" id="hintBtn" aria-expanded="${show}">ƒ Formel ${show?'':'anzeigen'}</button><div class="cp-formula" id="hintBox" ${show?'':'hidden'}>${esc(q.hint)}</div></div>`:'';
+  return `<ol class="cparts">${parts}</ol>${hint}`;
+}
+function wireCalc(q,rec,show){
+  const hb=$('hintBtn'); if(hb) hb.onclick=()=>{ const b=$('hintBox'); b.hidden=!b.hidden; hb.setAttribute('aria-expanded',!b.hidden); hb.textContent=b.hidden?'ƒ Formel anzeigen':'ƒ Formel'; };
+  if(rec.revealed) return;
+  const ins=[...$('view').querySelectorAll('.cparts input')];
+  ins.forEach((inp,i)=>{
+    inp.addEventListener('input',()=>{ rec.vals[i]=inp.value; inp.classList.toggle('bad', inp.value.trim()!=='' && !isFinite(parseNum(inp.value))); putRec(q,rec); renderFoot(q,rec,false); renderChrome(); });
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); if(i<ins.length-1) ins[i+1].focus(); else if(rec.vals.every(v=>isFinite(parseNum(v)))) evaluate(q); } });
+  });
+  if(!show && ins[0] && window.innerWidth>=900) ins[0].focus({preventScroll:true});
+}
 
 // ---------- Zeichenaufgaben ----------
 let PW=640, PH=440, ML=62, MR=18, MT=18, MB=54, FS=1;
@@ -741,7 +796,7 @@ function renderSetup(){
     if(p==='quick') Object.assign(setup,{n:10,topics:TOPICS.slice(),pool:'all',feedback:'each',limit:'none'});
     if(p==='twenty') Object.assign(setup,{n:20,topics:TOPICS.slice(),pool:'all',feedback:'each',limit:'none'});
     if(p==='weak') Object.assign(setup,{n:20,topics:TOPICS.slice(),pool:'weak',feedback:'each',limit:'none'});
-    if(p==='exam') Object.assign(setup,{n:60,topics:TOPICS.filter(t=>t!=='Graphen zeichnen'),pool:'all',feedback:'end',limit:'120'});
+    if(p==='exam') Object.assign(setup,{n:60,topics:TOPICS.filter(t=>t!=='Graphen zeichnen'&&t!=='Rechnungen'),pool:'all',feedback:'end',limit:'120'});
     saveSetup(); renderSetup(); toast('Voreinstellung übernommen – mit „Runde starten“ geht es los.'); });
   $('startRound').onclick=()=>startRound(setup);
   bindRoundRows();
@@ -898,7 +953,7 @@ document.addEventListener('keydown',e=>{
   const tag=(e.target.tagName||'').toLowerCase(); if(['input','textarea','select'].includes(tag) || document.querySelector('.modal-bg')) return;
   const ids=ctxIds(); const q=QMAP.get(ids[ctxIdx()]); if(!q) return; const rec=getRec(q);
   if(e.key==='ArrowRight'){ next(); e.preventDefault(); return; } if(e.key==='ArrowLeft'){ prev(); e.preventDefault(); return; }
-  if(isDraw(q)){ if(e.key==='Enter' && rec.revealed){ next(); e.preventDefault(); } return; }
+  if(isDraw(q)||isCalc(q)){ if(e.key==='Enter' && rec.revealed){ if(inRound() && ctxIdx()>=ids.length-1 && !R().finished) finishRoundAsk(); else next(); e.preventDefault(); } return; }
   const focusLi=()=>{ const li=document.querySelector(`.item[data-i="${focusItem}"]`); if(li) li.focus(); };
   if(/^[1-5]$/.test(e.key)){ focusItem=+e.key-1; focusLi(); e.preventDefault(); }
   else if(e.key==='ArrowDown'){ focusItem=Math.min(4,focusItem+1); focusLi(); e.preventDefault(); }
